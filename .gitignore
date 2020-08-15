@@ -338,3 +338,6 @@ libs/*.xml
 
 # Ignore built DLL
 APIDependencies/Build/APIDependencies.dll
+
+# Ignore zip files
+*.zip
