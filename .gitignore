@@ -331,4 +331,10 @@ ASALocalRun/
 # Ignore Library files
 libs/*.dll
 libs/*.xml
+
+# Ignore VSCode files
 .ionide
+.vscode
+
+# Ignore built DLL
+APIDependencies/Build/APIDependencies.dll
