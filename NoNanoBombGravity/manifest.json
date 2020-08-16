@@ -1,7 +1,7 @@
 {
     "name": "NoNanoBombGravity",
     "version_number": "1.0.0",
-    "website_url": "https://github.com/uGuardian/RoR2Mods",
+    "website_url": "https://github.com/uGuardian/RoR2Mods/tree/master/NoNanoBombGravity",
     "description": "Turns off gravity for Artificer's Nano Bomb",
     "dependencies": [
         "tristanmcpherson-R2API-2.5.0"
