@@ -334,6 +334,7 @@ libs/*.xml
 
 # Ignore VSCode files
 .ionide
+.vscode
 
 # Ignore built DLL
 */*.dll
