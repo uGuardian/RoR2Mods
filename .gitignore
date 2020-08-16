@@ -337,7 +337,7 @@ libs/*.xml
 .vscode
 
 # Ignore built DLL
-APIDependencies/Build/APIDependencies.dll
+*/*.dll
 
 # Ignore zip files
 *.zip
