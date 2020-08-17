@@ -341,3 +341,6 @@ libs/*.xml
 
 # Ignore zip files
 *.zip
+
+# Ignore GIMP xcf files
+*.xcf
