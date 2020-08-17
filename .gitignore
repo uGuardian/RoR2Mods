@@ -344,3 +344,6 @@ libs/*.xml
 
 # Ignore GIMP xcf files
 *.xcf
+
+# Ignore Unity Projects
+*/RoR2_*
