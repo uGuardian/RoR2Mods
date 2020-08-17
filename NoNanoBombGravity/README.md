@@ -11,4 +11,4 @@ To the best of my knowledge Nano Bomb is the only thing in the game that actuall
 <b>1.1.0</b>:<br>
 Configuration has been added, now you can make the gravity heavier, lighter, or even inverted if you really wanted.<br>
 It's a counter-coefficient, so<br>
-more-gravity⮜1⮜less-gravity
+positive-gravity⮜1⮜negative-gravity
