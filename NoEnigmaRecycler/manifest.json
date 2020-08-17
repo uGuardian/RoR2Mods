@@ -1,0 +1,9 @@
+{
+    "name": "NoEnigmaRecycler",
+    "version_number": "1.0.0",
+    "website_url": "https://github.com/uGuardian/RoR2Mods/tree/master/NoEnigmaRecycler",
+    "description": "Enigma will never change to Recycler",
+    "dependencies": [
+        "tristanmcpherson-R2API-2.5.0"
+    ]
+}
