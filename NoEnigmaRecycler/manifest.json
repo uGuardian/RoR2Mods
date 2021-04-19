@@ -1,9 +1,7 @@
 {
     "name": "NoEnigmaRecycler",
-    "version_number": "2.0.0",
+    "version_number": "3.0.0",
     "website_url": "https://github.com/uGuardian/RoR2Mods/tree/master/NoEnigmaRecycler",
     "description": "Exclude items from Enigma rolls",
-    "dependencies": [
-        "tristanmcpherson-R2API-2.5.6"
-    ]
+    "dependencies": []
 }

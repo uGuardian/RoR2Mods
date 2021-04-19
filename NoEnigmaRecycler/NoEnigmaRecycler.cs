@@ -1,7 +1,7 @@
 ﻿using BepInEx;
-using RoR2;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 
 namespace NoEnigmaRecycler
@@ -10,15 +10,17 @@ namespace NoEnigmaRecycler
     [BepInPlugin(
         "com.uGuardian.NoEnigmaRecycler",
         "NoEnigmaRecycler",
-        "2.0.0")]
+        "3.0.0")]
 
     public class NoEnigmaRecycler:BaseUnityPlugin
     {
         public static BepInEx.Configuration.ConfigEntry<bool> Recycler { get; set; }
         public static BepInEx.Configuration.ConfigEntry<bool> Lightning { get; set; }
+        public static BepInEx.Configuration.ConfigEntry<bool> FireBallDash { get; set; }
         public static BepInEx.Configuration.ConfigEntry<bool> LunarPotion { get; set; }
         public static BepInEx.Configuration.ConfigEntry<bool> LunarMeteor { get; set; }
         public static BepInEx.Configuration.ConfigEntry<bool> LunarHellfire { get; set; }
+        public static BepInEx.Configuration.ConfigEntry<string> Custom { get; set; }
 
         public void Awake()
         {
@@ -31,6 +33,12 @@ namespace NoEnigmaRecycler
             Lightning = Config.Bind<bool>(
 				"Normal",
 				"Royal Capacitor",
+				true,
+				"True if Enigma can roll this item"
+			);
+            FireBallDash = Config.Bind<bool>(
+				"Normal",
+				"Volcanic Egg",
 				true,
 				"True if Enigma can roll this item"
 			);
@@ -52,97 +60,46 @@ namespace NoEnigmaRecycler
 				true,
 				"True if Enigma can roll this item"
 			);
+            Custom = Config.Bind<string>(
+				"Custom",
+				"Custom <Advanced>",
+				"",
+				"A comma separated list of item m_Name IDs, mod compatible"
+			);
 
-            IL.RoR2.EquipmentCatalog.Init += il => {
+            List<string> exceptionList = new List<string>();
+            if (!Recycler.Value) {
+                exceptionList.Add("Recycle");
+            }
+            if (!Lightning.Value) {
+                exceptionList.Add("Lightning");
+            }
+            if (!LunarPotion.Value) {
+                //The item Tonic is the correct one, LunarPotion is not directly accessed at any point.
+                exceptionList.Add("Tonic");
+            }
+            if (!LunarMeteor.Value) {
+                exceptionList.Add("Meteor");
+            }
+            if (!LunarHellfire.Value) {
+                exceptionList.Add("BurnNearby");
+            }
+            if (!FireBallDash.Value) {
+                exceptionList.Add("FireBallDash");
+            }
+            if (Custom.Value != "") {
+                exceptionList.AddRange(Custom.Value.Split(','));
+                Debug.LogWarning("Custom exceptions enabled");
+            }
+            Debug.Log("Enigma Exceptions: " + string.Join(",", exceptionList));
 
-                var c = new ILCursor(il);
-
-                if (!Recycler.Value) {
-                    c.GotoNext(
-                        x => x.MatchLdstr("EQUIPMENT_RECYCLER_NAME"),
-                        x => x.MatchStfld<EquipmentDef>("nameToken"),
-                        x => x.MatchDup()
-                    );
-                    c.GotoNext(
-                        x => x.MatchDup(),
-                        x => x.MatchLdcI4(1),
-                        x => x.MatchStfld<EquipmentDef>("enigmaCompatible")
-                    );
-                    c.Index += 1;
-                    c.RemoveRange(1);
-                    c.Emit(OpCodes.Ldc_I4, 0);
-                    c.Index = 0;
-                }
-
-                if (!Lightning.Value) {
-                    c.GotoNext(
-                        x => x.MatchLdstr("EQUIPMENT_LIGHTNING_NAME"),
-                        x => x.MatchStfld<EquipmentDef>("nameToken"),
-                        x => x.MatchDup()
-                    );
-                    c.GotoNext(
-                        x => x.MatchDup(),
-                        x => x.MatchLdcI4(1),
-                        x => x.MatchStfld<EquipmentDef>("enigmaCompatible")
-                    );
-                    c.Index += 1;
-                    c.RemoveRange(1);
-                    c.Emit(OpCodes.Ldc_I4, 0);
-                    c.Index = 0;
-                }
-
-                if (!LunarPotion.Value) {
-                    //Tonic is weird, the equipment LunarPotion has the name, but the actual drop is the item Tonic.
-                    c.GotoNext(
-                        //EquipmentIndex.Tonic has no name, so we need to refer to something else.
-                        x => x.MatchLdstr("Prefabs/PickupModels/PickupTonic"),
-                        x => x.MatchStfld<EquipmentDef>("pickupModelPath"),
-                        x => x.MatchDup()
-                    );
-                    c.GotoNext(
-                        x => x.MatchDup(),
-                        x => x.MatchLdcI4(1),
-                        x => x.MatchStfld<EquipmentDef>("enigmaCompatible")
-                    );
-                    c.Index += 1;
-                    c.RemoveRange(1);
-                    c.Emit(OpCodes.Ldc_I4, 0);
-                    c.Index = 0;
-                }
-                
-                if (!LunarMeteor.Value) {
-                    c.GotoNext(
-                        x => x.MatchLdstr("EQUIPMENT_METEOR_NAME"),
-                        x => x.MatchStfld<EquipmentDef>("nameToken"),
-                        x => x.MatchDup()
-                    );
-                    c.GotoNext(
-                        x => x.MatchDup(),
-                        x => x.MatchLdcI4(1),
-                        x => x.MatchStfld<EquipmentDef>("enigmaCompatible")
-                    );
-                    c.Index += 1;
-                    c.RemoveRange(1);
-                    c.Emit(OpCodes.Ldc_I4, 0);
-                    c.Index = 0;
-                }
-
-                if (!LunarHellfire.Value) {
-                    c.GotoNext(
-                        x => x.MatchLdstr("EQUIPMENT_BURNNEARBY_NAME"),
-                        x => x.MatchStfld<EquipmentDef>("nameToken"),
-                        x => x.MatchDup()
-                    );
-                    c.GotoNext(
-                        x => x.MatchDup(),
-                        x => x.MatchLdcI4(1),
-                        x => x.MatchStfld<EquipmentDef>("enigmaCompatible")
-                    );
-                    c.Index += 1;
-                    c.RemoveRange(1);
-                    c.Emit(OpCodes.Ldc_I4, 0);
-                    c.Index = 0;
-                }
+            On.RoR2.EquipmentCatalog.RegisterEquipment += (orig, equipmentIndex, equipmentDef) =>
+            {
+                if (exceptionList.Any(str => str == equipmentDef.name)) {
+                    equipmentDef.enigmaCompatible = false;
+                    Debug.LogWarning("Enigma Exception: " + equipmentDef.name);
+                };
+                orig(equipmentIndex, equipmentDef);
             };
         }  
     }
