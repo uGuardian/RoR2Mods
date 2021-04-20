@@ -6,11 +6,10 @@ using UnityEngine;
 
 namespace NoEnigmaRecycler
 {
-    [BepInDependency("com.bepis.r2api")]
     [BepInPlugin(
         "com.uGuardian.NoEnigmaRecycler",
         "NoEnigmaRecycler",
-        "3.0.0")]
+        "3.0.1")]
 
     public class NoEnigmaRecycler:BaseUnityPlugin
     {
