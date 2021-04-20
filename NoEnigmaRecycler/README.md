@@ -13,6 +13,8 @@ Please @uGuardian on the modding Discord or DM me if you encounter any problems 
 
 ### Changelog
 
+#### 3.0.1:
+Fixed dependency issues, now only requires BepInEx.
 #### 3.0.0:
 Updated for the anniversary update, not compatible with previous versions!
 Now has custom item support! This should also include modded items.
